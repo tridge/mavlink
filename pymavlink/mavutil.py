@@ -440,6 +440,38 @@ class mavfile(object):
             self.recv_match(type='GPS_RAW', blocking=True,
                             condition='GPS_RAW.fix_type==2 and GPS_RAW.lat != 0 and GPS_RAW.alt != 0')
 
+    def arducopter_arm(self):
+        '''arm motors (arducopter only)'''
+        if self.mavlink10():
+            self.mav.command_long_send(
+                self.target_system,  # target_system
+                mavlink.MAV_COMP_ID_SYSTEM_CONTROL, # target_component
+                mavlink.MAV_CMD_COMPONENT_ARM_DISARM, # command
+                0, # confirmation
+                1, # param1 (1 to indicate arm)
+                0, # param2 (all other params meaningless)
+                0, # param3
+                0, # param4
+                0, # param5
+                0, # param6
+                0) # param7
+
+    def arducopter_disarm(self):
+        '''calibrate pressure'''
+        if self.mavlink10():
+            self.mav.command_long_send(
+                self.target_system,  # target_system
+                mavlink.MAV_COMP_ID_SYSTEM_CONTROL, # target_component
+                mavlink.MAV_CMD_COMPONENT_ARM_DISARM, # command
+                0, # confirmation
+                0, # param1 (0 to indicate disarm)
+                0, # param2 (all other params meaningless)
+                0, # param3
+                0, # param4
+                0, # param5
+                0, # param6
+                0) # param7
+
     def location(self):
         '''return current location'''
         self.wait_gps_fix()
