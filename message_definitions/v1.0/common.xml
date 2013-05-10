@@ -886,6 +886,24 @@
                   <description>Useful non-operational messages that can assist in debugging. These should not occur during normal operation.</description>
                </entry>
           </enum>
+          <enum name="STRING_OPERATION_ID">
+               <description>Identifiers for standard STRING_OPERATION requests. Values above 10000 are reserved for projectname_messages.xml</description>
+               <entry value="0" name="STRINGOP_FIRMWARE_VERSION">
+                  <description>Firmware version of primary board firmware</description>
+               </entry>
+               <entry value="1" name="STRINGOP_FIRMWARE2_VERSION">
+                  <description>Firmware version of secondary board firmware (eg. IO board)</description>
+               </entry>
+               <entry value="2" name="BOARD_TYPE">
+                  <description>Type of primary board</description>
+               </entry>
+               <entry value="3" name="BOARD_SERIAL">
+                  <description>Serial number of primary board</description>
+               </entry>
+               <entry value="4" name="MODE_NAME">
+                  <description>Display name of the autopilot mode given by subid</description>
+               </entry>
+          </enum>
      </enums>
      <messages>
           <message id="0" name="HEARTBEAT">
@@ -1585,6 +1603,17 @@
              <field type="uint64_t" name="transfer_uid">Unique transfer ID</field>
              <field type="uint8_t" name="result">0: OK, 1: not permitted, 2: bad path / file name, 3: no space left on device</field>
          </message>
+	 <message id="113" name="STRING_OPERATION">
+	   <description>Get/set strings on a device</description>
+	   <field type="uint8_t"  name="target_system">System ID</field>
+	   <field type="uint8_t"  name="target_component">Component ID</field>
+	   <field type="uint8_t"  name="operation">0: Get, 1: Set</field>
+	   <field type="uint16_t" name="id">string ID (see STRING_OPERATION_ID enum)</field>
+	   <field type="uint16_t" name="subid">string sub-ID</field>
+	   <field type="uint16_t" name="offset">offset into string</field>
+	   <field type="uint8_t"  name="length">string length - return zero for unknown strings</field>
+	   <field type="char[40]" name="string">string contents (may contain arbitrary 8-bit values - don't assume nul terminated)</field>
+	 </message>
          <message id="147" name="BATTERY_STATUS">
                <description>Transmitte battery informations for a accu pack.</description>
                <field type="uint8_t" name="accu_id">Accupack ID</field>
