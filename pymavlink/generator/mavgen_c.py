@@ -6,7 +6,7 @@ Copyright Andrew Tridgell 2011
 Released under GNU GPL version 3 or later
 '''
 
-import sys, textwrap, os, time
+import sys, textwrap, os, time, shutil
 import mavparse, mavtemplate
 
 t = mavtemplate.MAVTemplate()
@@ -473,25 +473,26 @@ ${{message:	mavlink_test_${name_lower}(system_id, component_id, last_msg);
 def copy_fixed_headers(directory, xml):
     '''copy the fixed protocol headers to the target directory'''
     import shutil
-    hlist = [ 'protocol.h', 'mavlink_helpers.h', 'mavlink_types.h', 'checksum.h', 'mavlink_conversions.h', 'mavlink_protobuf_manager.hpp' ]
+    common_headers = [ 'protocol.h', 'mavlink_helpers.h', 'mavlink_types.h', 'checksum.h' ]
+    headers_1_0 = [ 'mavlink_conversions.h', 'mavlink_protobuf_manager.hpp' ]
     basepath = os.path.dirname(os.path.realpath(__file__))
     srcpath = os.path.join(basepath, 'C/include_v%s' % xml.wire_protocol_version)
     print("Copying fixed headers")
-    for h in hlist:
-        if (not (h == 'mavlink_protobuf_manager.hpp' and xml.wire_protocol_version == '0.9')):
-           src = os.path.realpath(os.path.join(srcpath, h))
-           dest = os.path.realpath(os.path.join(directory, h))
-           if src == dest:
-               continue
-           shutil.copy(src, dest)
-    # XXX This is a hack - to be removed
-    if (xml.basename == 'pixhawk' and xml.wire_protocol_version == '1.0'):
-        h = 'pixhawk/pixhawk.pb.h'
-        src = os.path.realpath(os.path.join(srcpath, h))
-        dest = os.path.realpath(os.path.join(directory, h))
-        if src != dest:
-            shutil.copy(src, dest)
-        
+    for h in common_headers:
+        do_copy(h, srcpath, directory)
+    if xml.wire_protocol_version == '1.0':
+        for h in headers_1_0:
+          do_copy(h, srcpath, directory)
+        if xml.basename == 'pixhawk':
+          do_copy('pixhawk/pixhawk.pb.h', srcpath, directory)
+
+def do_copy(filename, srcdir, destdir):
+    '''copy single file from srcdir to destdir'''
+    src = os.path.realpath(os.path.join(srcdir, filename))
+    dest = os.path.realpath(os.path.join(destdir, filename))
+    if src != dest:
+        shutil.copy(src, dest)
+
 def copy_fixed_sources(directory, xml):
     # XXX This is a hack - to be removed
     import shutil
