@@ -45,6 +45,21 @@ class MAVWPLoader(object):
         self.wpoints.append(w)
         self.last_change = time.time()
 
+    def insert(self, idx, w, comment=''):
+        '''insert a waypoint'''
+        if idx >= self.count():
+            self.add(w, comment)
+            return
+        if idx < 0:
+            return
+        w = copy.copy(w)
+        if comment:
+            w.comment = comment
+        w.seq = idx
+        self.wpoints.insert(idx, w)
+        self.last_change = time.time()
+        self.reindex()
+
     def reindex(self):
         '''reindex waypoints'''
         for i in range(self.count()):
@@ -282,6 +297,19 @@ class MAVWPLoader(object):
                 w.x, w.y, w.z, w.autocontinue))
         f.close()
 
+    def is_location_command(self, cmd):
+        '''see if cmd is a MAV_CMD with a latitide/longitude.
+        We check if it has Latitude and Longitude params in the right indexes'''
+        mav_cmd = mavutil.mavlink.enums['MAV_CMD']
+        if not cmd in mav_cmd:
+            return False
+        if not mav_cmd[cmd].param.get(5,'').startswith('Latitude'):
+            return False
+        if not mav_cmd[cmd].param.get(6,'').startswith('Longitude'):
+            return False
+        return True
+
+
     def view_indexes(self, done=None):
         '''return a list waypoint indexes in view order'''
         ret = []
@@ -308,13 +336,7 @@ class MAVWPLoader(object):
                 if w.x != 0 or w.y != 0:
                     ret.append(idx)
                 continue
-            if (w.x != 0 or w.y != 0) and w.command in [mavutil.mavlink.MAV_CMD_NAV_WAYPOINT,
-                                                        mavutil.mavlink.MAV_CMD_NAV_LOITER_UNLIM,
-                                                        mavutil.mavlink.MAV_CMD_NAV_LOITER_TURNS,
-                                                        mavutil.mavlink.MAV_CMD_NAV_LOITER_TIME,
-                                                        mavutil.mavlink.MAV_CMD_NAV_LAND,
-                                                        mavutil.mavlink.MAV_CMD_NAV_TAKEOFF,
-                                                        mavutil.mavlink.MAV_CMD_NAV_SPLINE_WAYPOINT]:
+            if (w.x != 0 or w.y != 0) and self.is_location_command(w.command):
                 ret.append(idx)
             idx += 1
         return ret
