@@ -17,6 +17,14 @@
       <entry value="16777215" name="ACCELCAL_VEHICLE_POS_SUCCESS"/>
       <entry value="16777216" name="ACCELCAL_VEHICLE_POS_FAILED"/>
     </enum>
+    <enum name="HEADING_TYPE">
+      <entry value="0" name="HEADING_TYPE_COURSE_OVER_GROUND"/>
+      <entry value="1" name="HEADING_TYPE_HEADING"/>
+    </enum>
+    <enum name="SPEED_TYPE">
+      <entry value="0" name="SPEED_TYPE_AIRSPEED"/>
+      <entry value="1" name="SPEED_TYPE_GROUNDSPEED"/>
+    </enum>
     <!-- ardupilot specific MAV_CMD_* commands -->
     <enum name="MAV_CMD">
       <entry value="211" name="MAV_CMD_DO_GRIPPER">
@@ -228,6 +236,36 @@
         <param index="3">Empty</param>
         <param index="4">Empty</param>
         <param index="5">Magic number - set to 290876 to actually flash</param>
+        <param index="6">Empty</param>
+        <param index="7">Empty</param>
+      </entry>
+      <entry value="43000" name="MAV_CMD_GUIDED_CHANGE_SPEED">
+        <description>Change flight speed (affects guided only)</description>
+        <param index="1">Type (see SPEED_TYPE enum)</param>
+        <param index="2">Target Speed (m/s)</param>
+        <param index="3">Acceleration rate (m/s/s), 0 to take effect instantly</param>
+        <param index="4">Empty</param>
+        <param index="5">Empty</param>
+        <param index="6">Empty</param>
+        <param index="7">Empty</param>
+      </entry>
+      <entry value="43001" name="MAV_CMD_GUIDED_CHANGE_ALTITUDE">
+        <description>Change target altitude</description>
+        <param index="1">Empty</param>
+        <param index="2">Empty</param>
+        <param index="3">Rate of change (m/s), 0 for maximum rate change</param>
+        <param index="4">Empty</param>
+        <param index="5">Empty</param>
+        <param index="6">Empty</param>
+        <param index="7">Altitude (m)</param>
+      </entry>
+      <entry value="43002" name="MAV_CMD_GUIDED_CHANGE_HEADING">
+        <description>Change to target heading, rather then location flight mode</description>
+        <param index="1">Track type (see HEADING_TYPE enum)</param>
+        <param index="2">Target heading (degrees)</param>
+        <param index="3">Maximum centripetal accelearation (m/s/s)</param>
+        <param index="4">Empty</param>
+        <param index="5">Empty</param>
         <param index="6">Empty</param>
         <param index="7">Empty</param>
       </entry>
