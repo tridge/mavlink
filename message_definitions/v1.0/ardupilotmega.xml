@@ -279,6 +279,16 @@
         <param index="6">Empty</param>
         <param index="7">Empty</param>
       </entry>
+      <entry value="43003" name="MAV_CMD_FUEL_USED_RESET">
+        <description>Any Battery Module that is actually a fuel-flow sensor should zero its consumed fuel values.</description>
+        <param index="1">BatteryId or Zero for All</param>
+        <param index="2">Empty</param>
+        <param index="3">Empty</param>
+        <param index="4">Empty</param>
+        <param index="5">Empty</param>
+        <param index="6">Empty</param>
+        <param index="7">Empty</param>
+      </entry>
     </enum>
     <!-- AP_Limits Enums -->
     <enum name="LIMITS_STATE">
