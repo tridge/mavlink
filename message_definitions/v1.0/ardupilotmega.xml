@@ -1088,6 +1088,13 @@
       <entry value="10" name="TRACKER_MODE_AUTO"/>
       <entry value="16" name="TRACKER_MODE_INITIALIZING"/>
     </enum>
+    <enum name="OSD_PARAM_CONFIG_TYPE">
+      <description>The type of parameter for the OSD parameter editor.</description>
+      <entry value="0" name="OSD_PARAM_NONE"/>
+      <entry value="1" name="OSD_PARAM_SERIAL_PROTOCOL"/>
+      <entry value="2" name="OSD_PARAM_FLIGHT_MODE"/>
+      <entry value="3" name="OSD_PARAM_FAILSAFE_ACTION"/>
+    </enum>
   </enums>
   <messages>
     <message id="150" name="SENSOR_OFFSETS">
@@ -1693,6 +1700,14 @@
       <field type="uint16_t[4]" name="totalcurrent" units="mAh">Total current.</field>
       <field type="uint16_t[4]" name="rpm" units="rpm">RPM (eRPM).</field>
       <field type="uint16_t[4]" name="count">count of telemetry packets received (wraps at 65535).</field>
+    </message>
+    <message id="11033" name="OSD_PARAM_CONFIG">
+      <description>Configure an OSD parameter slot.</description>
+      <field type="uint8_t" name="target_system">System ID.</field>
+      <field type="uint8_t" name="target_component">Component ID.</field>
+      <field type="uint8_t" name="osd_index">OSD parameter display index.</field>
+      <field type="char[16]" name="param_id">Onboard parameter id, terminated by NULL if the length is less than 16 human-readable chars and WITHOUT null termination (NULL) byte if the length is exactly 16 chars - applications have to provide 16+1 bytes storage if the ID is stored as string</field>
+      <field type="uint8_t" name="config_type" enum="OSD_PARAM_CONFIG_TYPE">Config type.</field>
     </message>
   </messages>
 </mavlink>
