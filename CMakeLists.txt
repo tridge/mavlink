@@ -173,12 +173,10 @@ set(v1.0Definitions
     ASLUAV.xml
     ardupilotmega.xml
     common.xml
-    matrixpilot.xml
     minimal.xml
     paparazzi.xml
     python_array_test.xml
     test.xml
-    ualberta.xml
     )
 generateMavlink("1.0" "${v1.0Definitions}")
 generateMavlink("2.0" "${v1.0Definitions}")
